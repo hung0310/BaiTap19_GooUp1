@@ -1,9 +1,9 @@
 let studentList = []
 let id = 0;
 let index = 1;
-
+let temp_List = []
 window.onload = function() {
-    ShowInfo(index);
+    Show(index);
     Pagination();
 };
 
@@ -124,7 +124,6 @@ function Pagination() {
                 } else {
                     --id;
                     index = id;
-                    console.log(id);
                     ShowInfo(id);
                     var next = document.getElementById("Next");
                     next.classList.remove('disabled');
@@ -192,7 +191,36 @@ function Pagination() {
 
 RenderList();
 
+function Array_Temp() {
+    const filePath = 'data.json';
+    studentList.splice(0, studentList.length);
+    fetch(filePath)
+        .then(response => response.json()) 
+        .then(data => {
+            temp_List =data;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
 function ShowInfo(index) {
+    let first_line = (index * 10 - 10);
+    let last_line = index * 10 - 1; 
+    studentList.splice(0, studentList.length);
+    temp_List.slice(first_line, last_line + 1).forEach(obj => { 
+        var ten = obj.ten;
+        var ns = obj.ns;
+        var gt = obj.gt;
+        var cn = obj.cn;
+        ++id;
+        var newStudent = { id, ten, ns, gt, cn };
+        console.log(newStudent);
+        studentList.push(newStudent);
+    });
+    RenderList();
+}
+
+function Show(index) {
+    Array_Temp();
     let first_line = (index * 10 - 10);
     let last_line = index * 10 - 1; 
     const filePath = 'data.json';
@@ -207,6 +235,7 @@ function ShowInfo(index) {
                 var cn = obj.cn;
                 ++id;
                 var newStudent = { id, ten, ns, gt, cn };
+                console.log(newStudent);
                 studentList.push(newStudent);
             });
             RenderList();
@@ -275,30 +304,22 @@ document.getElementById('sort_ns').addEventListener('click', function(event) {
     }
 });
 
-function insertionSortInRange(array, first_line, flag, number_line) {
-    var count = 0;
-    console.log('first: ' + first_line);
-    for (let i = first_line + 1; i <= first_line + number_line - 1; i++) { //first-last+1 == index*10 - TT <=> 10 = 
-        ++count;
-        if(count <= number_line) {
-            let key = array[i];
-            let j = i - 1;
-            if(flag === 'ascending') {
-                while (j >= first_line && compareDates(array[j].ns, key.ns) > 0) {
-                    array[j + 1] = array[j];
-                    j--;
-                }
-                array[j + 1] = key;
-            } else {
-                while (j >= first_line && compareDates(array[j].ns, key.ns) < 0) {
-                    array[j + 1] = array[j];
-                    j--;
-                }
-                array[j + 1] = key;
+function insertionSortInRange(array, flag) {
+    for (let i = 1; i < array.length; i++) { 
+        let key = array[i];
+        let j = i - 1;
+        if (flag === 'ascending') {
+            while (j >= 0 && compareDates(array[j].ns, key.ns) > 0) {
+                array[j + 1] = array[j];
+                j--;
             }
+            array[j + 1] = key;
         } else {
-            console.log(array);
-            return array;
+            while (j >= 0 && compareDates(array[j].ns, key.ns) < 0) {
+                array[j + 1] = array[j];
+                j--;
+            }
+            array[j + 1] = key;
         }
     }
     return array;
@@ -320,66 +341,43 @@ function compareDates(date1, date2) {
 function InsertionSort_ByBirth(index, flag) {
     let first_line = (index * 10 - 10);
     let last_line = index * 10 - 1;
-    const filePath = 'data.json';
-    var number_line = 0;
     studentList.splice(0, studentList.length);
-    fetch(filePath)
-        .then(response => response.json())
-        .then(data => {
-            data.slice(first_line, last_line + 1).forEach((obj, ind) => {
-                ++number_line;
-                console.log("index of: " + ind)
-            });
-            console.log('number line: ' + number_line);
-            insertionSortInRange(data, first_line, flag, number_line);
-            data.slice(first_line, last_line + 1).forEach(obj => {
-                var ten = obj.ten;
-                var ns = obj.ns;
-                var gt = obj.gt;
-                var cn = obj.cn;
-                ++id;
-                var newStudent = { id, ten, ns, gt, cn };
-                studentList.push(newStudent);
-            });
-            RenderList();
-        })
-        .catch(error => console.error('Error fetching data:', error));
+    insertionSortInRange(temp_List, flag);
+    temp_List.slice(first_line, last_line + 1).forEach(obj => {
+        var ten = obj.ten;
+        var ns = obj.ns;
+        var gt = obj.gt;
+        var cn = obj.cn;
+        ++id;
+        var newStudent = { id, ten, ns, gt, cn };
+        studentList.push(newStudent);
+    });
+    RenderList();
 }
 
 function InsertionSort_ByName(index, flag) {
     let first_line = (index * 10 - 10);
     let last_line = index * 10 - 1;
-    const filePath = 'data.json';
-    var number_line = 0;
     studentList.splice(0, studentList.length);
-    fetch(filePath)
-        .then(response => response.json())
-        .then(data => {
-            data.slice(first_line, last_line + 1).forEach((obj, ind) => {
-                ++number_line;
-            });
-            console.log('number line: ' + number_line);
-            InsertionSortByName(data, first_line, number_line, flag);
-            data.slice(first_line, last_line + 1).forEach(obj => {
-                var ten = obj.ten;
-                var ns = obj.ns;
-                var gt = obj.gt;
-                var cn = obj.cn;
-                ++id;
-                var newStudent = { id, ten, ns, gt, cn };
-                studentList.push(newStudent);
-            });
-            RenderList();
-        })
-        .catch(error => console.error('Error fetching data:', error));
+    InsertionSortByName(temp_List, flag);
+    temp_List.slice(first_line, last_line + 1).forEach(obj => {
+        var ten = obj.ten;
+        var ns = obj.ns;
+        var gt = obj.gt;
+        var cn = obj.cn;
+        ++id;
+        var newStudent = { id, ten, ns, gt, cn };
+        studentList.push(newStudent);
+    });
+    RenderList();
 }
 
-function InsertionSortByName(array, first_line, number_line, flag) {
-    for (let i = first_line + 1; i <= first_line + number_line - 1; i++) {
-        if(flag === 'ascending') {
+function InsertionSortByName(array, flag) {
+    for (let i = 1; i < array.length; i++) {
+        if (flag === 'ascending') {
             let key = array[i];
             let j = i - 1;
-            while (j >= first_line && array[j].ten.localeCompare(key.ten) > 0) {
+            while (j >= 0 && array[j].ten.localeCompare(key.ten) > 0) {
                 array[j + 1] = array[j];
                 j--;
             }
@@ -387,7 +385,7 @@ function InsertionSortByName(array, first_line, number_line, flag) {
         } else {
             let key = array[i];
             let j = i - 1;
-            while (j >= first_line && array[j].ten.localeCompare(key.ten) < 0) {
+            while (j >= 0 && array[j].ten.localeCompare(key.ten) < 0) {
                 array[j + 1] = array[j];
                 j--;
             }
