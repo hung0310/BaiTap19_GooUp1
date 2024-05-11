@@ -1,0 +1,22 @@
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.clicked {
+    background-color: black; 
+    color: white; 
+}
+
+.hidden {
+    display: none;
+}
+
+.add_img {
+    height: 8px;
+}
+
+.design_img {
+    width: 19px;
+    height: 19px;
+}
