@@ -2,6 +2,7 @@ let studentList = []
 let id = 0;
 let index = 1;
 let temp_List = []
+
 window.onload = function() {
     Show(index);
     Pagination();
@@ -66,19 +67,6 @@ function Pagination() {
                     id = i;
                     index = i;
                     ShowInfo(i);
-
-                    var img_ns = document.querySelector('#sort_ns img');
-                    img_ns.classList.add('hidden');
-                    img_ns.src = 'sort_both.png';
-                    img_ns.classList.remove('hidden'); 
-                    img_ns.classList.add('design_img');
-    
-                    var img_tensv = document.querySelector('#sort_tensv img');
-                    img_tensv.classList.add('hidden');
-                    img_tensv.src = 'sort_both.png';
-                    img_tensv.classList.remove('hidden'); 
-                    img_tensv.classList.add('design_img');
-
                     if(id == Math.ceil(numberOfLines/10)) {
                         var next = document.getElementById("Next");
                         next.classList.add('disabled');
@@ -105,19 +93,6 @@ function Pagination() {
             }
 
             prevLi.addEventListener('click', function() {
-
-                var img_ns = document.querySelector('#sort_ns img');
-                img_ns.classList.add('hidden');
-                img_ns.src = 'sort_both.png';
-                img_ns.classList.remove('hidden'); 
-                img_ns.classList.add('design_img');
-
-                var img_tensv = document.querySelector('#sort_tensv img');
-                img_tensv.classList.add('hidden');
-                img_tensv.src = 'sort_both.png';
-                img_tensv.classList.remove('hidden'); 
-                img_tensv.classList.add('design_img');
-
                 if(id == 1) {
                     var prev = document.getElementById("Prev");
                     prev.classList.add('disabled');
@@ -148,18 +123,6 @@ function Pagination() {
             ulElement.appendChild(nextLi);
 
             nextLi.addEventListener('click', function() {
-                var img_ns = document.querySelector('#sort_ns img');
-                img_ns.classList.add('hidden');
-                img_ns.src = 'sort_both.png';
-                img_ns.classList.remove('hidden'); 
-                img_ns.classList.add('design_img');
-
-                var img_tensv = document.querySelector('#sort_tensv img');
-                img_tensv.classList.add('hidden');
-                img_tensv.src = 'sort_both.png';
-                img_tensv.classList.remove('hidden'); 
-                img_tensv.classList.add('design_img');
-
                 if(id == Math.ceil(numberOfLines/10)) {
                     var next = document.getElementById("Next");
                     next.classList.add('disabled');
@@ -279,7 +242,6 @@ document.getElementById('sort_ns').addEventListener('click', function(event) {
     event.preventDefault(); 
     click_ns++;
     var img = document.querySelector('#sort_ns img');
-
     var img_tensv = document.querySelector('#sort_tensv img');
     img_tensv.classList.add('hidden');
     img_tensv.src = 'sort_both.png';
@@ -328,7 +290,6 @@ function insertionSortInRange(array, flag) {
 function compareDates(date1, date2) {
     const [day1, month1, year1] = date1.split('/').map(Number);
     const [day2, month2, year2] = date2.split('/').map(Number);
-
     if (year1 !== year2) {
         return year1 - year2;
     }
